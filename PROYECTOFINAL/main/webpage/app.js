@@ -340,7 +340,7 @@ function SeleccionLEDAZUL(){
 	alert("LED AZUL");
 }
 
-private static void enviarSolicitudHTTP() {
+/*private static void enviarSolicitudHTTP() {
     try {
         // URL del servidor y ruta específica
         URL url = new URL("http://tu_direccion_ip:puerto/set_rgb"); // Reemplaza con la dirección y puerto correctos
@@ -370,7 +370,7 @@ private static void enviarSolicitudHTTP() {
     } catch (Exception e) {
         e.printStackTrace();
     }
-}
+}*/
 
 
 

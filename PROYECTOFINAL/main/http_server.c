@@ -454,6 +454,60 @@ static esp_err_t http_server_wifi_connect_status_json_handler(httpd_req_t *req)
 	return ESP_OK;
 }
 
+//CAMBIAR ESTADO
+esp_err_t set_rgb_handler(httpd_req_t *req) {
+    char content[100];
+    int ret, remaining = req->content_len;
+
+    // Read the data for the request
+    if ((ret = httpd_req_recv(req, content, MIN(remaining, sizeof(content)))) <= 0) {
+        if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+            // Send HTTP 408 (Request Timeout) error code
+            httpd_resp_send_408(req);
+        }
+        return ESP_FAIL;
+    }
+
+    content[ret] = 0; // Null-terminate the content string
+    ESP_LOGI(TAG, "Received data: %s", content);
+
+    // Parse the JSON data
+    cJSON *json = cJSON_Parse(content);
+    if (json == NULL) {
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL) {
+            ESP_LOGE(TAG, "Error before: %s", error_ptr);
+        }
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    cJSON *lsuperior = cJSON_GetObjectItemCaseSensitive(json, "lsuperior");
+    cJSON *linferior = cJSON_GetObjectItemCaseSensitive(json, "linferior");
+    cJSON *intensidad = cJSON_GetObjectItemCaseSensitive(json, "intensidad");
+	cJSON *led = cJSON_GetObjectItemCaseSensitive(json, "led");
+
+
+	ESP_LOGE(TAG, "Received data: %s", content);
+    // Convert the string values to integer
+    uint8_t sintensidad = (uint8_t)atoi(intensidad->valuestring);
+    uint8_t slsuperior = (uint8_t)atoi(lsuperior->valuestring);
+    uint8_t slinferior = (uint8_t)atoi(linferior ->valuestring);
+	uint8_t sled = (uint8_t)atoi(led ->valuestring);
+
+	//Logica encendido de los leds 
+	//if (sled==1){
+		uint8_t irojo=sintensidad;
+		rgb_led_set_color(10, 0, 0);
+		
+	//}
+
+
+    cJSON_Delete(json);
+    return ESP_OK;
+}
+
+
 /**
  * Sets up the default httpd server configuration.
  * @return http server instance handle if successful, NULL otherwise.
@@ -645,72 +699,6 @@ void http_server_fw_update_reset_callback(void *arg)
 
 
 
-//CAMBIAR ESTADO
-esp_err_t set_rgb_handler(httpd_req_t *req) {
-    char content[100];
-    int ret, remaining = req->content_len;
-
-    // Read the data for the request
-    if ((ret = httpd_req_recv(req, content, MIN(remaining, sizeof(content)))) <= 0) {
-        if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
-            // Send HTTP 408 (Request Timeout) error code
-            httpd_resp_send_408(req);
-        }
-        return ESP_FAIL;
-    }
-
-    content[ret] = 0; // Null-terminate the content string
-    ESP_LOGI(TAG, "Received data: %s", content);
-
-    // Parse the JSON data
-    cJSON *json = cJSON_Parse(content);
-    if (json == NULL) {
-        const char *error_ptr = cJSON_GetErrorPtr();
-        if (error_ptr != NULL) {
-            ESP_LOGE(TAG, "Error before: %s", error_ptr);
-        }
-        httpd_resp_send_500(req);
-        return ESP_FAIL;
-    }
-
-    cJSON *lsuperior = cJSON_GetObjectItemCaseSensitive(json, "lsuperior");
-    cJSON *linferior = cJSON_GetObjectItemCaseSensitive(json, "linferior");
-    cJSON *intensidad = cJSON_GetObjectItemCaseSensitive(json, "intensidad");
-	cJSON *led = cJSON_GetObjectItemCaseSensitive(json, "led");
-
-
-	ESP_LOGE(TAG, "Received data: %s", content);
-    // Convert the string values to integer
-    uint8_t sintensidad = (uint8_t)atoi(intensidad->valuestring);
-    uint8_t slsuperior = (uint8_t)atoi(lsuperior->valuestring);
-    uint8_t slinferior = (uint8_t)atoi(linferior ->valuestring);
-	uint8_t sled = (uint8_t)atoi(led ->valuestring);
-
-	//Logica encendido de los leds 
-	//if (sled==1){
-		uint8_t irojo=sintensidad;
-		rgb_led_set_color(10, 0, 0);
-		
-	//}
-
-    // Set the LED colors intensity
-    /*if (cJSON_IsString(red) && cJSON_IsString(green) && cJSON_IsString(blue)) {
-        // Convert the string values to integer
-        uint8_t red_value = (uint8_t)atoi(red->valuestring);
-        uint8_t green_value = (uint8_t)atoi(green->valuestring);
-        uint8_t blue_value = (uint8_t)atoi(blue->valuestring);
-
-        // Now set the LED color
-        rgb_led_set_color(red_value, green_value, blue_value);
-        httpd_resp_send(req, "LED color set", HTTPD_RESP_USE_STRLEN);
-    } else {
-        ESP_LOGE(TAG, "Error parsing RGB values");
-        httpd_resp_send_500(req);
-    }*/
-
-    cJSON_Delete(json);
-    return ESP_OK;
-}
 
 
 
