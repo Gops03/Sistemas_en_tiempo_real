@@ -1,12 +1,9 @@
-/**
- * Application entry point.
- */
+
+//#include <stdio.h>
 
 #include "nvs_flash.h"
-#include "driver/gpio.h"
+
 #include "wifi_app.h"
-#include "rgb_led.h"
-#include "http_server.h"
 
 void app_main(void)
 {
@@ -18,7 +15,7 @@ void app_main(void)
 		ret = nvs_flash_init();
 	}
 	ESP_ERROR_CHECK(ret);
+
 	// Start Wifi
 	wifi_app_start();
 }
-

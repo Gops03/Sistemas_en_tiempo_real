@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name "apple-mobile-web-app-capable" content="yes" />
+    <script src="jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" href="app.css">
+    <script async src="app.js"></script>
+    <title>SISTEMADECONTROL</title>
+    <style>
+        /* Estilo para el fondo del cuerpo (blanco) */
+        body {
+            background-color: #8495f5; /* Blanco */
+            padding: 20px;
+        }
+        /* Estilo para el contenedor principal */
+        #container {
+            display: flex;
+            flex-direction: column;
+        }
+        /* Estilo para el contenedor de botones en el lado izquierdo */
+        #botonera {
+            display: flex;
+            flex-direction: column;
+        }
+        /* Estilo para el contenedor de la barra de desplazamiento "Intensidad" */
+        #intensidad-container {
+            text-align: left;
+            background-color: #fff; /* Fondo blanco para resaltar */
+            padding: 10px;
+        }
+        /* Ajustes para evitar que elementos se solapen */
+        #OTA, #DHT22Sensor, #WiFiConnect {
+            margin-top: 10px; /* Espacio desde la parte superior */
+        }
+        /* Estilo para los botones (más pequeños) */
+        .small-button {
+            width: 100px; /* Ancho reducido */
+            height: 30px; /* Altura reducida */
+            font-size: 14px; /* Tamaño de fuente más pequeño */
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>SISTEMA DE CONTROL</h1>
+</header>
+
+<div id="botonera">
+    <h2>Selección de LED</h2> <!-- Título -->
+    
+    <!-- Botón "Verde" con cuadros de texto -->
+    <div class="button-container">
+        <input id="Verde" type="button" value="Verde" class="small-button" />
+        <input id="li1"type="text" placeholder="Limite Inferior" class="input-text" />
+        <input id="ls1"type="text" placeholder="Limite Superior" class="input-text" />
+        <input id="i1"type="text" placeholder="Intensidad" class="input-text" />
+    </div>
+
+    <!-- Botón "Rojo" con cuadros de texto -->
+    <div class="button-container">
+        <input id="Rojo" type="button" value="Rojo" class="small-button" />
+        <input id="li2"type="text" placeholder="Limite Inferior" class="input-text" />
+        <input id="ls2"type="text" placeholder ="Limite Superior" class="input-text" />
+        <input id="i2"type="text" placeholder="Intensidad" class="input-text" />
+    </div>
+
+    <!-- Botón "Azul" con cuadros de texto -->
+    <div class="button-container">
+        <input id="Azul" type="button" value="Azul" class="small-button" />
+        <input id="li3"type="text" placeholder="Limite Inferior" class="input-text" />
+        <input id="ls3"type="text" placeholder ="Limite Superior" class="input-text" />
+        <input id="i3"type="text" placeholder="Intensidad" class="input-text" />
+    </div>
+</div>
+
+<div id="OTA">
+    <h2>ESP32 Firmware Update</h2>
+    <label id="latest_firmware_label">Latest Firmware: </label>
+    <div id="latest_firmware"></div>
+    <input type="file" id "selected_file" accept=".bin" style="display: none;" onchange="getFileInfo()" />
+    <div class="buttons">
+        <input type="button" value="Select File" class="small-button" onclick="document.getElementById('selected_file').click();" />
+        <input type="button" value="Update Firmware" class="small-button" onclick="updateFirmware()" />
+    </div>
+    <h4 id="file_info"></h4>
+    <h4 id="ota_update_status"></h4>
+</div>
+
+<div id="DHT22Sensor">
+    <h2>DHT22 Sensor Readings</h2>
+    <label for="temperature_reading">Temperature: </label>
+    <div id="temperature_reading"></div>
+    <label for "humidity_reading">Humidity: </label>
+    <div id="humidity_reading"></div>
+</div>
+
+<div id="WiFiConnect">
+    <h2>ESP32 WiFi Connect</h2>
+    <section>
+        <input id="connect_ssid" type="text" maxlength="32" placeholder="SSID" value="">
+        <input id="connect_pass" type="password" maxlength="64" placeholder="Password" value="">
+        <input type="checkbox" onclick="showPassword()">Show Password
+    </section>
+    <div class="buttons">
+        <input id="connect_wifi" type="button" value="Connect" class="small-button" />
+    </div>
+    <div id="wifi_connect_credentials_errors"></div>
+    <h4 id="wifi_connect_status"></h4>
+</div>
+
+</body>
+</html>
+
+
+
