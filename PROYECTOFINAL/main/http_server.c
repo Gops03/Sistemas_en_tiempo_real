@@ -456,6 +456,7 @@ static esp_err_t http_server_wifi_connect_status_json_handler(httpd_req_t *req)
 
 //CAMBIAR ESTADO
 esp_err_t set_rgb_handler(httpd_req_t *req) {
+
     char content[100];
     int ret, remaining = req->content_len;
 
@@ -496,11 +497,11 @@ esp_err_t set_rgb_handler(httpd_req_t *req) {
 	uint8_t sled = (uint8_t)atoi(led ->valuestring);
 
 	//Logica encendido de los leds 
-	//if (sled==1){
+	if (sled==1){
 		uint8_t irojo=sintensidad;
-		rgb_led_set_color(10, 0, 0);
+		rgb_led_set_color(irojo, 0, 0);
 		
-	//}
+	}
 
 
     cJSON_Delete(json);

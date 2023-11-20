@@ -312,15 +312,33 @@ function showPassword()
 	}
 }
 
-function SeleccionLEDROJO(){
-	var intensidad = document.getElementById("i2").value;
-	var lsuperior = document.getElementById("ls2").value;
-	var linferior= document.getElementById("li2").value;
-	var led=1;
-	//enviarSolicitudHTTP();
-	alert("LED ROJO");
-	
+function SeleccionLEDROJO() {
+    var intensidad = document.getElementById("i2").value;
+    var lsuperior = document.getElementById("ls2").value;
+    var linferior = document.getElementById("li2").value;
+    var led = 1;
+
+    // Crear la instancia de XMLHttpRequest antes de usarla
+    var xhr = new XMLHttpRequest();
+
+    // Validar los valores antes de enviarlos
+    if (isValidColorValue(lsuperior) && isValidColorValue(linferior) && isValidColorValue(intensidad)) {
+        xhr.open("POST", "/set_rgb");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log('LED Update Response:', xhr.responseText);
+            }
+        };
+        xhr.send(JSON.stringify({ lsuperior: lsuperior, linferior: linferior, intensidad: intensidad, led: led }));
+    } else {
+        alert("Please enter valid color values (0-255).");
+    }
+
+    alert("LED rojos");
 }
+
+
 
 function SeleccionLEDVERDE(){
 	var intensidad = document.getElementById("i1").value;

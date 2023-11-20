@@ -20,5 +20,6 @@ void app_main(void)
 	ESP_ERROR_CHECK(ret);
 	// Start Wifi
 	wifi_app_start();
+	rgb_led_set_color(0, 0, 0);
 }
 
