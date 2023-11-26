@@ -302,7 +302,58 @@ function ESTADOS() {
 }
 
 
+//proyecto final 
+function checkCredentials() {
+	// Simulación de verificación de usuario y contraseña
+	var username = document.getElementById('auth_user').value;
+	var password = document.getElementById('auth_pass').value;
 
+	// Lógica de autenticación
+	if (username === 'ian' && password === '1234') {
+		// Autenticación exitosa
+		document.getElementById('security_auth_credentials_errors').innerText = '';
+		document.getElementById('security_auth_status').innerText = 'Autenticación exitosa';
+		document.getElementById('toggleAlarm').style.display = 'block'; // Muestra el botón para activar/desactivar la alarma
+	} else {
+		// Autenticación fallida
+		document.getElementById('security_auth_credentials_errors').innerText = 'Usuario o contraseña incorrectos';
+		document.getElementById('security_auth_status').innerText = '';
+		document.getElementById('toggleAlarm').style.display = 'none'; // Oculta el botón si la autenticación falla
+	}
+}
+
+function toggleAlarm() {
+	var alarmStatus = document.getElementById('alarm_status');
+	var alarma=0;
+	// Lógica para activar/desactivar la alarma
+	if (alarmStatus.innerText === 'Alarma activada') {
+		alarmStatus.innerText = 'Alarma desactivada';
+		alarma=1;
+	} else {
+		alarmStatus.innerText = 'Alarma activada';
+		alarma=0;
+	}
+	$.ajax({
+		url: '/ACTIVACIONALARMA',      // La URL a la que se realiza la solicitud
+		dataType: 'json',              // El tipo de datos esperado en la respuesta (JSON en este caso)
+		method: 'POST',                // El método HTTP de la solicitud (POST en este caso)
+		cache: false,                  // Desactiva la caché del navegador para esta solicitud
+		data: alarma,         // Los datos que se envían en el cuerpo de la solicitud (en formato JSON)
+		contentType: 'application/json', // El tipo de contenido que se está enviando (JSON en este caso)
+		success: function(response) {   // Función que se ejecuta cuando la solicitud tiene éxito
+		  // Manejar la respuesta exitosa del servidor
+		  console.log(response);
+		},
+		error: function(xhr, status, error) {  // Función que se ejecuta cuando hay un error en la solicitud
+		  // Manejar errores
+		  console.error(xhr.responseText);
+		}
+	  })
+}
+
+function showPassword() {
+	// Lógica para mostrar/ocultar la contraseña (puedes implementar esta función según tus necesidades)
+}
 
 
 

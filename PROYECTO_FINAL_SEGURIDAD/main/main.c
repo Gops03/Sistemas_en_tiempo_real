@@ -10,13 +10,13 @@
 #include "control_uart.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "esp_log.h"
 
 void app_main(void)
 {
 	uart_init();
     // Crea una tarea para leer datos del UART
     xTaskCreate(uart_command_task, "uart_read_task", 2048, NULL, 5, NULL);
-
     // Initialize NVS
 	esp_err_t ret = nvs_flash_init();
 	if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
