@@ -303,7 +303,7 @@ function ESTADOS() {
 
 
 //proyecto final 
-function checkCredentials() {
+function checkCredentials2() {
 	// Simulación de verificación de usuario y contraseña
 	var username = document.getElementById('auth_user').value;
 	var password = document.getElementById('auth_pass').value;
@@ -323,32 +323,34 @@ function checkCredentials() {
 }
 
 function toggleAlarm() {
-	var alarmStatus = document.getElementById('alarm_status');
-	var alarma=0;
-	// Lógica para activar/desactivar la alarma
-	if (alarmStatus.innerText === 'Alarma activada') {
-		alarmStatus.innerText = 'Alarma desactivada';
-		alarma=1;
-	} else {
-		alarmStatus.innerText = 'Alarma activada';
-		alarma=0;
-	}
-	$.ajax({
-		url: '/ACTIVACIONALARMA',      // La URL a la que se realiza la solicitud
-		dataType: 'json',              // El tipo de datos esperado en la respuesta (JSON en este caso)
-		method: 'POST',                // El método HTTP de la solicitud (POST en este caso)
-		cache: false,                  // Desactiva la caché del navegador para esta solicitud
-		data: alarma,         // Los datos que se envían en el cuerpo de la solicitud (en formato JSON)
-		contentType: 'application/json', // El tipo de contenido que se está enviando (JSON en este caso)
-		success: function(response) {   // Función que se ejecuta cuando la solicitud tiene éxito
-		  // Manejar la respuesta exitosa del servidor
-		  console.log(response);
-		},
-		error: function(xhr, status, error) {  // Función que se ejecuta cuando hay un error en la solicitud
-		  // Manejar errores
-		  console.error(xhr.responseText);
-		}
-	  })
+    var alarmStatus = document.getElementById('alarm_status');
+    var alarma = 0;
+
+    // Lógica para activar/desactivar la alarma
+    if (alarmStatus.innerText === 'Alarma activada') {
+        alarmStatus.innerText = 'Alarma desactivada';
+        alarma = 0;
+    } else {
+        alarmStatus.innerText = 'Alarma activada';
+        alarma = 1;
+    }
+
+    // Enviar el estado de la alarma al servidor
+    fetch('/activar_alarma', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: alarma, // Enviar directamente el valor como parte del cuerpo de la solicitud
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error('Error al enviar el estado de la alarma al servidor');
+        }
+    })
+    .catch(error => {
+        console.error('Error de red:', error);
+    });
 }
 
 function showPassword() {

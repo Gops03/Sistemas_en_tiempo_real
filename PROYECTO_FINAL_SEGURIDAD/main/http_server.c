@@ -201,7 +201,7 @@ static esp_err_t http_server_app_js_handler(httpd_req_t *req)
  */
 static esp_err_t http_server_favicon_ico_handler(httpd_req_t *req)
 {
-	ESP_LOGI(TAG, "gonorrea hijo de puta");
+	ESP_LOGI(TAG, "favicon.ico requested");
 
 	httpd_resp_set_type(req, "image/x-icon");
 	httpd_resp_send(req, (const char *)favicon_ico_start, favicon_ico_end - favicon_ico_start);
@@ -480,42 +480,38 @@ esp_err_t ACTIVACIONALARMA(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "ACTIVACIONALARMA requested");
 
-    // Leer el tamaño del contenido del cuerpo
-    size_t content_length = req->content_len;
+    // Aquí deberías procesar la solicitud y activar o desactivar la alarma según el contenido.
 
-    // Alocar memoria para el cuerpo y leerlo
-    char *body = malloc(content_length + 1);
-    httpd_req_recv(req, body, content_length);
-    body[content_length] = '\0';  // Asegúrate de terminar la cadena con null
-
-    // Analizar el cuerpo JSON usando cJSON
-    cJSON *json = cJSON_Parse(body);
-
-    // Verificar si el análisis fue exitoso
-    if (json == NULL) {
-        // Manejar error de análisis JSON
-        ESP_LOGE(TAG, "Error parsing JSON: %s", cJSON_GetErrorPtr());
-        free(body);
-        return ESP_FAIL;
+    // Por ejemplo, puedes obtener el contenido del cuerpo de la solicitud.
+    char buffer[100];
+    int ret, remaining = req->content_len;
+    while (remaining > 0) {
+        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0) {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT) {
+                httpd_resp_send_408(req);
+            }
+            return ESP_FAIL;
+        }
+        // Aquí procesas el contenido del cuerpo de la solicitud (buffer).
+        remaining -= ret;
     }
 
-    // Acceder al valor específico que estás buscando, por ejemplo, 'alarma'
-    cJSON *alarmaJson = cJSON_GetObjectItemCaseSensitive(json, "alarma");
-    if (cJSON_IsNumber(alarmaJson)) {
-        int alarmaValue = alarmaJson->valueint;
+    // Imprime el contenido del cuerpo de la solicitud
+    ESP_LOGI(TAG, "Contenido del cuerpo de la solicitud: %s", buffer);
 
-        // Ahora puedes usar alarmaValue como necesites
-        ESP_LOGI(TAG, "Received alarm value: %d", alarmaValue);
-    }
+    // Convierte el valor de "alarma" a un entero
+    int valorAlarma = atoi(buffer);
 
-    // Liberar memoria y destruir el objeto cJSON
-    free(body);
-    cJSON_Delete(json);
+    // Imprime el valor entero de "alarma"
+    ESP_LOGI(TAG, "Valor entero de alarma: %d", valorAlarma);
 
-    // Realizar cualquier otra lógica necesaria
+    // Realiza la lógica para activar o desactivar la alarma según el valor del entero.
+    // Por ejemplo, si el valor de "alarma" es 1, activa la alarma.
+    // Si es 0, desactiva la alarma.
 
     return ESP_OK;
 }
+
 
 /**
  * Sets up the default httpd server configuration.
@@ -632,13 +628,13 @@ static httpd_handle_t http_server_configure(void)
 		
 		//PROYECTO FINAL
 		//Registra el handler de correspondiente a la autenticacion y lectura del boton de la alarma 
-		httpd_uri_t ACTIVACIONALARMAA = {
-				.uri = "/ACTIVACIONALARMA",
-				.method = HTTP_POST,
-				.handler = ACTIVACIONALARMA,
-				.user_ctx = NULL
-		};
-		httpd_register_uri_handler(http_server_handle, &ACTIVACIONALARMAA);
+	    httpd_uri_t activar_alarma = {
+        .uri = "/activar_alarma",
+        .method = HTTP_POST,
+        .handler = ACTIVACIONALARMA,
+        .user_ctx = NULL
+    };
+        httpd_register_uri_handler(http_server_handle, &activar_alarma);
 
 		// register wifiConnect.json handler
 		httpd_uri_t wifi_connect_json = {
