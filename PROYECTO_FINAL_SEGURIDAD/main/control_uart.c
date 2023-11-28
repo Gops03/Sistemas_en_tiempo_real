@@ -9,8 +9,8 @@
 
 extern int led_id=0;
 extern int new_duty=0;
-char usuario[9]="12345679";
-char contrasena[9]="87654321";
+char usuario[9];
+char contrasena[9];
 
 //FUNCION DE INICIALIZACION PARA EL UART 
 void uart_init(void)
@@ -46,8 +46,6 @@ void uart_command_task(void *arg)
     const char *mensaje3 = "El nuevo usuario es: ";
     const char *mensaje4 = "Por favor introduce la nueva contraseña(exactamente 8 caracteres): \n";
     const char *mensaje5 = "la nueva contraseña es: ";
-    char usuario[8];  // Variable para almacenar el nombre de usuario
-    char contrasena[8];  // Variable para almacenar la contraseña
 
     while (1)
     {
@@ -78,6 +76,7 @@ void uart_command_task(void *arg)
                 uart_write_bytes(UART_NUM, mensaje4, strlen(mensaje4));
                 len = uart_read_bytes(UART_NUM, (uint8_t *)contrasena, sizeof(contrasena), portMAX_DELAY);
                 contrasena[len] = '\0';
+
                 uart_write_bytes(UART_NUM, mensaje5, strlen(mensaje5));
                 uart_write_bytes(UART_NUM, contrasena, strlen(contrasena));
 

@@ -70,6 +70,13 @@ void http_server_fw_update_reset_callback(void *arg);
 
 //esp_err_t ESTADOLED(httpd_req_t *req);
 int scanalarma (void);
+int scanluzh1 (void);
+int scanluzen (void);
+int scannevera(void);
+int scanph1(void);
+int scanpers(void);
+int scansirena(void);
+
 
 
 #endif /* MAIN_HTTP_SERVER_H_ */

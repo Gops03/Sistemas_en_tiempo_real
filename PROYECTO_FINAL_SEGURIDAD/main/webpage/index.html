@@ -79,6 +79,12 @@
         #updateTemperatureBtn {
             margin-right: 10px; /* Ajusta el margen según sea necesario */
         }
+
+        #luzContainer {
+           display: inline-block;
+           vertical-align: middle;
+           margin-right: 20px; /* Ajusta el margen derecho según sea necesario */
+        }        
     </style>
     <script async src="app.js"></script>
     <title>SISTEMA DE SEGURIDAD</title>
@@ -89,10 +95,10 @@
     </header>
 
     <div id="WiFiConnect">
-        <h2>ESP32 WiFi Connect</h2>
+        <h2>CONECTARTE A WIFI PROVEEDOR</h2>
         <section>
             <input id="connect_ssid" type="text" maxlength="32" placeholder="SSID" value="">
-            <input id="connect_pass" type="password" maxlength="64" placeholder="Password" value="">
+            <input id="connect_pass" type="password" maxlength="64" placeholder="Contraseña" value="">
             <input type="checkbox" onclick="showPassword()"> Mostrar Contraseña
         </section>
         <div class="buttons">
@@ -116,6 +122,49 @@
                 <button id="updateTemperatureBtn" style="display: none;" onclick="updateTemperature()">Actualizar Temperatura</button>
                 <span id="temperatureDisplay"></span>
             </div>
+
+            <div id="h1">
+                <div id="luzContainer" style="display: flex; align-items: center;">
+                    <button id="LH1" style="display: none;" onclick="botonhabitacion1()">Luz Habitacion principal</button>
+                    <span id="ESTADO1" style="margin-left: 10px;"><span id="estadoMensaje"></span></span>
+                </div>
+            </div>  
+
+            <div id="entrada">
+                <div id="luzContainer2" style="display: flex; align-items: center;">
+                    <button id="LE" style="display: none;" onclick="botonentrada()">Luz Entrada</button>
+                    <span id="ESTADO2" style="margin-left: 10px;"><span id="estadoMensaje1"></span></span>
+                </div>
+            </div>   
+
+            <div id="nevera">
+                <div id="NeveraContainer" style="display: flex; align-items: center;">
+                    <button id="NEVERA" style="display: none;" onclick="botonnevera()">Nevera</button>
+                    <span id="ESTADO" style="margin-left: 10px;"><span id="estadoMensaje2"></span></span>
+                </div>
+            </div>  
+
+            <div id="persianash1">
+                <div id="Ph1container" style="display: flex; align-items: center;">
+                    <button id="PERSIANASH1" style="display: none;" onclick="botonpersianash1()">Persianas Habitacion Principal</button>
+                    <span id="ph1" style="margin-left: 10px;"><span id="estadoMensaje3"></span></span>
+                </div>
+            </div>
+
+            <div id="persianass">
+                <div id="Pscontainer" style="display: flex; align-items: center;">
+                    <button id="PERSIANASS" style="display: none;" onclick="botonpersianass()">Persianas Sala</button>
+                    <span id="ps" style="margin-left: 10px;"><span id="estadoMensaje4"></span></span>
+                </div>
+            </div>
+
+            <div id="sirena">
+                <div id="sirenacontainer" style="display: flex; align-items: center;">
+                    <button id="SIRENA" style="display: none;" onclick="botonsirena()">Activas/Desactivar Sirena</button>
+                    <span id="SIR" style="margin-left: 10px;"><span id="estadoMensaje5"></span></span>
+                </div>
+            </div>
+            
         </div>
         <div id="security_auth_credentials_errors"></div>
         <h4 id="security_auth_status"></h4>

@@ -303,46 +303,50 @@ function ESTADOS() {
 
 
 //proyecto final 
-function checkCredentials2() {
-	// Simulación de verificación de usuario y contraseña
-	var username = document.getElementById('auth_user').value;
-	var password = document.getElementById('auth_pass').value;
-	
 
-	// Lógica de autenticación
-	if (username === 'ian' && password === '1234') {
-		// Autenticación exitosa
-		document.getElementById('security_auth_credentials_errors').innerText = '';
-		document.getElementById('security_auth_status').innerText = 'Autenticación exitosa';
-		document.getElementById('toggleAlarm').style.display = 'block'; // Muestra el botón para activar/desactivar la alarma
-		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
-		document.getElementById("updateTemperatureBtn").style.display = "block";
-		document.getElementById("temperatureDisplay").style.display = "inline";
-	} else {
-		// Autenticación fallida
-		document.getElementById('security_auth_credentials_errors').innerText = 'Usuario o contraseña incorrectos';
-		document.getElementById('security_auth_status').innerText = '';
-		document.getElementById('toggleAlarm').style.display = 'none'; // Oculta el botón si la autenticación falla
-		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
-		document.getElementById("updateTemperatureBtn").style.display = "none";
-	}
-	// Lógica de autenticación
-	if (username === usuarioGlobal && password === contrasenaGlobal) {
-		// Autenticación exitosa
-		document.getElementById('security_auth_credentials_errors').innerText = '';
-		document.getElementById('security_auth_status').innerText = 'Autenticación exitosa';
-		document.getElementById('toggleAlarm').style.display = 'block'; // Muestra el botón para activar/desactivar la alarma
-		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
-		document.getElementById("updateTemperatureBtn").style.display = "block";
-		document.getElementById("temperatureDisplay").style.display = "inline";
-	} else {
-		// Autenticación fallida
-		document.getElementById('security_auth_credentials_errors').innerText = 'Usuario o contraseña incorrectos';
-		document.getElementById('security_auth_status').innerText = '';
-		document.getElementById('toggleAlarm').style.display = 'none'; // Oculta el botón si la autenticación falla
-		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
-		document.getElementById("updateTemperatureBtn").style.display = "none";
-	}
+
+function checkCredentials2() {
+    // Simulación de verificación de usuario y contraseña
+    var username = document.getElementById('auth_user').value;
+    var password = document.getElementById('auth_pass').value;
+
+    // Lógica de autenticación
+    if ((username === 'ian' && password === '1234') || (username === usuarioGlobal && password === contrasenaGlobal)) {
+        // Autenticación exitosa
+        document.getElementById('security_auth_credentials_errors').innerText = '';
+        document.getElementById('security_auth_status').innerText = 'Autenticación exitosa';
+        document.getElementById('toggleAlarm').style.display = 'block'; // Muestra el botón para activar/desactivar la alarma
+        // Si las credenciales son válidas, muestra el botón de actualizar temperatura
+        document.getElementById("updateTemperatureBtn").style.display = "block";
+        document.getElementById("temperatureDisplay").style.display = "inline";
+        // Muestra el nuevo botón
+        document.getElementById("LH1").style.display = "block";
+		document.getElementById("ESTADO1").style.display = "inline";
+		document.getElementById("LE").style.display = "block";
+		document.getElementById("ESTADO2").style.display = "inline";
+		document.getElementById("NEVERA").style.display = "block";
+		document.getElementById("ESTADO").style.display = "inline";
+		document.getElementById("PERSIANASH1").style.display = "block";
+		document.getElementById("ph1").style.display = "inline";
+		document.getElementById("PERSIANASS").style.display = "block";
+		document.getElementById("ps").style.display = "inline";
+		document.getElementById("SIRENA").style.display = "block";
+		document.getElementById("SIR").style.display = "inline";
+    } else {
+        // Autenticación fallida
+        document.getElementById('security_auth_credentials_errors').innerText = 'Usuario o contraseña incorrectos';
+        document.getElementById('security_auth_status').innerText = '';
+        document.getElementById('toggleAlarm').style.display = 'none'; // Oculta el botón si la autenticación falla
+        // Si las credenciales son válidas, muestra el botón de actualizar temperatura
+        document.getElementById("updateTemperatureBtn").style.display = "none";
+        // Oculta el nuevo botón en caso de autenticación fallida
+        document.getElementById("LH1").style.display = "none";
+		document.getElementById("LE").style.display = "none";
+		document.getElementById("NEVERA").style.display = "none";
+		document.getElementById("PERSIANASH1").style.display = "none";
+		document.getElementById("PERSIANASS").style.display = "none";
+		document.getElementById("SIRENA").style.display = "none";
+    }
 }
 
 function toggleAlarm() {
@@ -433,9 +437,158 @@ function updateCredentials() {
     xhr.send();
 }
 
+// Variable para mantener el estado actual de la luz (inicializado en 1)
+var estadoLuz = 0;
+
+function botonhabitacion1() {
+    // Obtener el valor opuesto al estado actual de la luz
+    var valorLuz = estadoLuz === 1 ? 0 : 1;
+
+    // Crear una instancia de XMLHttpRequest
+    var xhr = new XMLHttpRequest();
+
+    // Configurar la solicitud POST a la ruta "/activar_luz1"
+    xhr.open("POST", "/activar_luz1", true);
+
+    // Configurar el encabezado para indicar que se enviará texto plano
+    xhr.setRequestHeader("Content-Type", "text/plain");
+
+    // Enviar la solicitud con el valor de la luz en el cuerpo
+    xhr.send(valorLuz.toString());
+
+    // Actualizar el estado de la luz para la próxima vez
+    estadoLuz = valorLuz;
+
+    // Actualizar el elemento de estado según el valor enviado
+    var estadoElement = document.getElementById('estadoMensaje');
+    estadoElement.innerText = valorLuz === 1 ? 'Luz activada' : 'Luz desactivada';
+}
 
 
+var luzEntrada = 0;
+function botonentrada() {
+    // Obtener el valor opuesto al estado actual de la luz de entrada
+    var valorEntrada = luzEntrada === 1 ? 0 : 1;
 
+    // Crear una instancia de XMLHttpRequest
+    var xhr = new XMLHttpRequest();
+
+    // Configurar la solicitud POST a la ruta "/activar_entrada"
+    xhr.open("POST", "/activar_luze", true);
+
+    // Configurar el encabezado para indicar que se enviará texto plano
+    xhr.setRequestHeader("Content-Type", "text/plain");
+
+    // Enviar la solicitud con el valor de la luz de entrada en el cuerpo
+    xhr.send(valorEntrada.toString());
+
+    // Actualizar el estado de la luz de entrada para la próxima vez
+    luzEntrada = valorEntrada;
+
+    // Actualizar el elemento de estado según el valor enviado
+    var estadoElement = document.getElementById('estadoMensaje1');
+    estadoElement.innerText = valorEntrada === 1 ? 'Luz de entrada activada' : 'Luz de entrada desactivada';
+}
+
+var estadoNevera = 0;
+function botonnevera() {
+    // Obtener el valor opuesto al estado actual de la nevera
+    var valorNevera = estadoNevera === 1 ? 0 : 1;
+
+    // Crear una instancia de XMLHttpRequest
+    var xhr = new XMLHttpRequest();
+
+    // Configurar la solicitud POST a la ruta "/activar_nevera"
+    xhr.open("POST", "/activar_nevera", true);
+
+    // Configurar el encabezado para indicar que se enviará texto plano
+    xhr.setRequestHeader("Content-Type", "text/plain");
+
+    // Enviar la solicitud con el valor de la nevera en el cuerpo
+    xhr.send(valorNevera.toString());
+
+    // Actualizar el estado de la nevera para la próxima vez
+    estadoNevera = valorNevera;
+
+    // Actualizar el elemento de estado según el valor enviado
+    var estadoElement = document.getElementById('estadoMensaje2');
+    estadoElement.innerText = valorNevera === 1 ? 'Nevera activada' : 'Nevera desactivada';
+}
+
+var estadoPersianas = 0;
+function botonpersianash1() {
+    // Obtener el valor opuesto al estado actual de las persianas
+    var valorPersianas = estadoPersianas === 1 ? 0 : 1;
+
+    // Crear una instancia de XMLHttpRequest
+    var xhr = new XMLHttpRequest();
+
+    // Configurar la solicitud POST a la ruta "/activar_persianas"
+    xhr.open("POST", "/activar_perh1", true);
+
+    // Configurar el encabezado para indicar que se enviará texto plano
+    xhr.setRequestHeader("Content-Type", "text/plain");
+
+    // Enviar la solicitud con el valor de las persianas en el cuerpo
+    xhr.send(valorPersianas.toString());
+
+    // Actualizar el estado de las persianas para la próxima vez
+    estadoPersianas = valorPersianas;
+
+    // Actualizar el elemento de estado según el valor enviado
+    var estadoElement = document.getElementById('estadoMensaje3');
+    estadoElement.innerText = valorPersianas === 1 ? 'Persiana Arriba' : 'Persiana Abajo';
+}
+
+var estadoPersianas2 = 0;
+function botonpersianass() {
+    // Obtener el valor opuesto al estado actual de las persianas2
+    var valorPersianas2 = estadoPersianas2 === 1 ? 0 : 1;
+
+    // Crear una instancia de XMLHttpRequest
+    var xhr = new XMLHttpRequest();
+
+    // Configurar la solicitud POST a la ruta "/activar_persianas2"
+    xhr.open("POST", "/activar_pers", true);
+
+    // Configurar el encabezado para indicar que se enviará texto plano
+    xhr.setRequestHeader("Content-Type", "text/plain");
+
+    // Enviar la solicitud con el valor de las persianas2 en el cuerpo
+    xhr.send(valorPersianas2.toString());
+
+    // Actualizar el estado de las persianas2 para la próxima vez
+    estadoPersianas2 = valorPersianas2;
+
+    // Actualizar el elemento de estado según el valor enviado
+    var estadoElement = document.getElementById('estadoMensaje4');
+    estadoElement.innerText = valorPersianas2 === 1 ? 'Persiana Arriba' : 'Persiana Abajo';
+}
+
+var estadoSirena = 0;
+function botonsirena() {
+    // Obtener el valor opuesto al estado actual de la sirena
+    var valorSirena = estadoSirena === 1 ? 0 : 1;
+
+    // Crear una instancia de XMLHttpRequest
+    var xhr = new XMLHttpRequest();
+
+    // Configurar la solicitud POST a la ruta "/activar_sirena"
+    xhr.open("POST", "/activar_sirena", true);
+
+    // Configurar el encabezado para indicar que se enviará texto plano
+    xhr.setRequestHeader("Content-Type", "text/plain");
+
+    // Enviar la solicitud con el valor de la sirena en el cuerpo
+    xhr.send(valorSirena.toString());
+
+    // Actualizar el estado de la sirena para la próxima vez
+    estadoSirena = valorSirena;
+
+    // Actualizar el elemento de estado según el valor enviado
+    var estadoElement = document.getElementById('estadoMensaje5');
+    estadoElement.innerText = valorSirena === 1 ? 'Sirena Activada' : 'Sirena Desactivada';
+}
 
 
 

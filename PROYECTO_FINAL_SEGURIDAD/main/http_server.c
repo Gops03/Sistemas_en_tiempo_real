@@ -21,6 +21,14 @@
 
 
 int valorAlarma=0;
+int valorLuz=0;
+int luzEntrada=0;
+int nevera=0;
+int ph1=0;
+int ps=0;
+int sirena=0;
+
+
 
 // Tag used for ESP serial console messages
 static const char TAG[] = "http_server";
@@ -545,6 +553,285 @@ esp_err_t NUEVACREDENCIAL(httpd_req_t *req)
     return ESP_OK;
 }
 
+esp_err_t LUZH1(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Luz Habitacion principal requested");
+
+    // Buffer para almacenar el cuerpo de la solicitud
+    char buffer[10];
+    int ret, remaining = req->content_len;
+
+    // Leer el cuerpo de la solicitud
+    while (remaining > 0)
+    {
+        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
+        {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
+            {
+                httpd_resp_send_408(req);
+            }
+            return ESP_FAIL;
+        }
+        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
+        remaining -= ret;
+    }
+
+    // Convertir el valor de la luz a un entero
+    valorLuz = atoi(buffer);
+	scanluzh1();
+
+    // Ahora, puedes usar el valorLuz según tus necesidades.
+    if (valorLuz == 1)
+    {
+        // Realiza acciones cuando la luz está activada
+        ESP_LOGI(TAG, "Luz principal activada");
+    }
+    else if (valorLuz == 0)
+    {
+        // Realiza acciones cuando la luz está desactivada
+        ESP_LOGI(TAG, "Luz principal desactivada");
+    }
+    else
+    {
+        // Valor no reconocido, manejar según tus necesidades
+        ESP_LOGW(TAG, "Valor de luz no reconocido: %d", valorLuz);
+    }
+
+
+    return ESP_OK;
+}
+
+esp_err_t LUZEN(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Luz Entrada requested");
+	    // Buffer para almacenar el cuerpo de la solicitud
+    char buffer[10];
+    int ret, remaining = req->content_len;
+
+    // Leer el cuerpo de la solicitud
+    while (remaining > 0)
+    {
+        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
+        {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
+            {
+                httpd_resp_send_408(req);
+            }
+            return ESP_FAIL;
+        }
+        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
+        remaining -= ret;
+    }
+
+    // Convertir el valor de la luz a un entero
+    luzEntrada = atoi(buffer);
+
+    // Ahora, puedes usar el luzEntrada según tus necesidades.
+    if (luzEntrada == 1)
+    {
+        // Realiza acciones cuando la luz está activada
+        ESP_LOGI(TAG, "Luz entrada activada");
+    }
+    else if (luzEntrada == 0)
+    {
+        // Realiza acciones cuando la luz está desactivada
+        ESP_LOGI(TAG, "Luz entrada desactivada");
+    }
+    else
+    {
+        // Valor no reconocido, manejar según tus necesidades
+        ESP_LOGW(TAG, "Valor de luz no reconocido: %d", luzEntrada);
+    }
+    return ESP_OK;
+}
+
+esp_err_t NEVERA(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Nevera requested");
+	    // Buffer para almacenar el cuerpo de la solicitud
+    char buffer[10];
+    int ret, remaining = req->content_len;
+
+    // Leer el cuerpo de la solicitud
+    while (remaining > 0)
+    {
+        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
+        {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
+            {
+                httpd_resp_send_408(req);
+            }
+            return ESP_FAIL;
+        }
+        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
+        remaining -= ret;
+    }
+
+    // Convertir el valor de la luz a un entero
+    nevera = atoi(buffer);
+	scannevera();
+
+
+    // Ahora, puedes usar el luzEntrada según tus necesidades.
+    if (nevera == 1)
+    {
+        // Realiza acciones cuando la luz está activada
+        ESP_LOGI(TAG, "Nevera activada");
+    }
+    else if (nevera == 0)
+    {
+        // Realiza acciones cuando la luz está desactivada
+        ESP_LOGI(TAG, "Nevera desactivada");
+    }
+    else
+    {
+        // Valor no reconocido, manejar según tus necesidades
+        ESP_LOGW(TAG, "Valor de luz no reconocido: %d", nevera);
+    }
+    return ESP_OK;
+}
+
+esp_err_t PH1(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Persianas Habitacion Principal requested");
+	    // Buffer para almacenar el cuerpo de la solicitud
+    char buffer[10];
+    int ret, remaining = req->content_len;
+
+    // Leer el cuerpo de la solicitud
+    while (remaining > 0)
+    {
+        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
+        {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
+            {
+                httpd_resp_send_408(req);
+            }
+            return ESP_FAIL;
+        }
+        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
+        remaining -= ret;
+    }
+
+    // Convertir el valor de la luz a un entero
+    ph1 = atoi(buffer);
+	scanph1();
+
+
+    // Ahora, puedes usar el luzEntrada según tus necesidades.
+    if (ph1 == 1)
+    {
+        // Realiza acciones cuando la luz está activada
+        ESP_LOGI(TAG, "Persianas Habitacion Principal Arriba");
+    }
+    else if (ph1 == 0)
+    {
+        // Realiza acciones cuando la luz está desactivada
+        ESP_LOGI(TAG, "Persianas Habitacion Principal Abajo");
+    }
+    else
+    {
+        // Valor no reconocido, manejar según tus necesidades
+        ESP_LOGW(TAG, "Valor de persiana no reconocido: %d", ph1);
+    }
+    return ESP_OK;
+}
+
+esp_err_t PERS(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Persianas Sala requested");
+	    // Buffer para almacenar el cuerpo de la solicitud
+    char buffer[10];
+    int ret, remaining = req->content_len;
+
+    // Leer el cuerpo de la solicitud
+    while (remaining > 0)
+    {
+        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
+        {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
+            {
+                httpd_resp_send_408(req);
+            }
+            return ESP_FAIL;
+        }
+        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
+        remaining -= ret;
+    }
+
+    // Convertir el valor de la luz a un entero
+    ps = atoi(buffer);
+	scanpers();
+
+
+
+    // Ahora, puedes usar el luzEntrada según tus necesidades.
+    if (ps == 1)
+    {
+        // Realiza acciones cuando la luz está activada
+        ESP_LOGI(TAG, "Persianas Sala Arriba");
+    }
+    else if (ps == 0)
+    {
+        // Realiza acciones cuando la luz está desactivada
+        ESP_LOGI(TAG, "Persianas Sala Abajo");
+    }
+    else
+    {
+        // Valor no reconocido, manejar según tus necesidades
+        ESP_LOGW(TAG, "Valor de persiana no reconocido: %d", ps);
+    }
+    return ESP_OK;
+}
+
+esp_err_t SIRENA(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "SIRENA requested");
+	// Buffer para almacenar el cuerpo de la solicitud
+    char buffer[10];
+    int ret, remaining = req->content_len;
+
+    // Leer el cuerpo de la solicitud
+    while (remaining > 0)
+    {
+        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
+        {
+            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
+            {
+                httpd_resp_send_408(req);
+            }
+            return ESP_FAIL;
+        }
+        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
+        remaining -= ret;
+    }
+
+    // Convertir el valor de la luz a un entero
+    sirena = atoi(buffer);
+	scansirena();
+
+
+
+
+    // Ahora, puedes usar el luzEntrada según tus necesidades.
+    if (sirena == 1)
+    {
+        // Realiza acciones cuando la luz está activada
+        ESP_LOGI(TAG, "SIRENA ACTIVADA");
+    }
+    else if (sirena == 0)
+    {
+        // Realiza acciones cuando la luz está desactivada
+        ESP_LOGI(TAG, "SIRENA DESACTIVADA");
+    }
+    else
+    {
+        // Valor no reconocido, manejar según tus necesidades
+        ESP_LOGW(TAG, "Valor de sirena no reconocido: %d", sirena);
+    }
+    return ESP_OK;
+}
+
 
 /**
  * Sets up the default httpd server configuration.
@@ -686,6 +973,60 @@ static httpd_handle_t http_server_configure(void)
         .user_ctx = NULL
         };
 		httpd_register_uri_handler(http_server_handle, &nuevas_credenciales);
+		
+		//boton luz habitacion 1
+	    httpd_uri_t activar_luz1 = {
+        .uri = "/activar_luz1",
+        .method = HTTP_POST,
+        .handler = LUZH1,
+        .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &activar_luz1);
+
+		//boton luz entrada
+	    httpd_uri_t activar_luze = {
+        .uri = "/activar_luze",
+        .method = HTTP_POST,
+        .handler = LUZEN,
+        .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &activar_luze);
+
+		//boton nevera
+	    httpd_uri_t activar_nevera = {
+        .uri = "/activar_nevera",
+        .method = HTTP_POST,
+        .handler = NEVERA,
+        .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &activar_nevera);
+
+		//boton persiana habitacion principal
+	    httpd_uri_t activar_perh1 = {
+        .uri = "/activar_perh1",
+        .method = HTTP_POST,
+        .handler = PH1,
+        .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &activar_perh1);
+
+		//boton persiana sala
+	    httpd_uri_t activar_pers = {
+        .uri = "/activar_pers",
+        .method = HTTP_POST,
+        .handler = PERS,
+        .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &activar_pers);
+
+		//boton sirena
+	    httpd_uri_t activar_sirena = {
+        .uri = "/activar_sirena",
+        .method = HTTP_POST,
+        .handler = SIRENA,
+        .user_ctx = NULL
+        };
+        httpd_register_uri_handler(http_server_handle, &activar_sirena);
 
 		// register wifiConnect.json handler
 		httpd_uri_t wifi_connect_json = {
@@ -751,6 +1092,27 @@ void http_server_fw_update_reset_callback(void *arg)
 int scanalarma (){
     return valorAlarma;
 }
+
+int scanluzh1 (){
+    return valorLuz;
+}
+
+int scannevera (){
+    return nevera ;
+}
+
+int scanph1 (){
+    return ph1 ;
+}
+
+int scanpers (){
+    return ps ;
+}
+
+int scansirena (){
+    return sirena ;
+}
+
 
 
 
