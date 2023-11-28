@@ -69,6 +69,7 @@ void http_server_stop(void);
 void http_server_fw_update_reset_callback(void *arg);
 
 //esp_err_t ESTADOLED(httpd_req_t *req);
+int scanalarma (void);
 
 
 #endif /* MAIN_HTTP_SERVER_H_ */

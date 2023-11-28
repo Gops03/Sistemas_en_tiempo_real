@@ -33,80 +33,66 @@ void uart_init(void)
 
 
 // Tarea para recibir comandos y ajustar el duty cycle de los LEDs
-void uart_command_task(void* arg)
+void uart_command_task(void *arg)
 {
-    uint8_t* data = (uint8_t*)malloc(BUF_SIZE);
+    uint8_t *data = (uint8_t *)malloc(BUF_SIZE);
+    const char *bienvenida = "Bienvenido al centro de mando. \n";
+    const char *mensaje1 = "A continuacion digite su numero de superusuario para acceder a los controles: \n";
+    const char *accede = "ACCESO CONFIRMADO. \n";
+    const char *noaccede = "ACCESO DENEGADO. \n";
+    const char *mensaje2 = "Por favor introduce el nuevo usuario. \n";
+    const char *mensaje3 = "El nuevo usuario es:. \n";
+    const char *mensaje4 = "Por favor introduce la nueva contraseña. \n";
+    const char *mensaje5 = "la nueva contraseña es:. \n";
+    char usuario[32];  // Variable para almacenar el nombre de usuario
+    char contrasena[32];  // Variable para almacenar la contraseña
+
     while (1)
     {
         int len = uart_read_bytes(UART_NUM, data, BUF_SIZE, 20 / portTICK_PERIOD_MS);
         if (len > 0)
         {
-            // Procesa los comandos recibidos aquí
             char command[32];
-            strncpy(command, (char*)data, len);
+            strncpy(command, (char *)data, len);
             command[len] = '\0';
 
-            led_id = -1;
-            new_duty = -1;
+            // Envía datos a través de UART directamente en la tarea
+            uart_write_bytes(UART_NUM, bienvenida, strlen(bienvenida));
+            uart_write_bytes(UART_NUM, mensaje1, strlen(mensaje1));
 
-            // Verifica si el comando tiene el formato correcto "D<LED_ID>:<DUTY>"
-            if (sscanf(command, "D%d:%d", &led_id, &new_duty) == 2)
+            // Verifica si el comando es para encender el LED
+            if (strcmp(command, "1234") == 0)
             {
-                if (led_id >= 1 && led_id <= 6 && new_duty >= 0 && new_duty <= 255)
-                {
-                    // Actualiza el duty cycle del LED especificado
-                    led_id--; // Ajusta el índice del LED (0-5 en lugar de 1-6)
-                    //duty_cycle[led_id] = new_duty;
-                    //printf("LED %d: Duty cycle actualizado a %d%%\n", led_id + 1, duty_cycle[led_id]);
-                    
-                    switch (led_id)
-                    {
-                    case 0:
-                        rgb_led_set_color(new_duty, 0, 0, 0, 0, 0);
-                        printf("LED %d: Duty cycle actualizado\n", led_id + 1);  
-                        scan();                                  
-                        break;
-                    case 1:
-                        rgb_led_set_color(0, new_duty, 0, 0, 0, 0);
-                        printf("LED %d: Duty cycle actualizado\n", led_id + 1);
-                        scan();
-                        break;
-                    case 2:
-                        rgb_led_set_color(0, 0, new_duty, 0, 0, 0);
-                        printf("LED %d: Duty cycle actualizado\n", led_id + 1);
-                        scan();
-                        break;                    
-                    case 3:
-                        rgb_led_set_color(0, 0, 0, new_duty, 0, 0);
-                        printf("LED %d: Duty cycle actualizado\n", led_id + 1);
-                        scan();
-                        break;
-                    case 4:
-                        rgb_led_set_color(0, 0, 0, 0, new_duty, 0);
-                        printf("LED %d: Duty cycle actualizado\n", led_id + 1);
-                        scan();
-                        break;                    
-                    case 5:
-                        rgb_led_set_color(0, 0, 0, 0, 0, new_duty);
-                        printf("LED %d: Duty cycle actualizado\n", led_id + 1);
-                        scan();
-                        break;
-                    default:
-                        break;
-                    }
+                uart_write_bytes(UART_NUM, accede, strlen(accede));
+                uart_write_bytes(UART_NUM, mensaje2, strlen(mensaje2));
 
-                }
-                else
-                {
-                    printf("Comando inválido: LED_ID debe estar entre 1 y 6, y DUTY debe estar entre 0 y 255\n");
-                }
+                // Espera a recibir el nombre de usuario
+                len = uart_read_bytes(UART_NUM, data, BUF_SIZE, portMAX_DELAY);
+                strncpy(usuario, (char *)data, len);
+                usuario[len] = '\0';
+                uart_write_bytes(UART_NUM, mensaje3, strlen(mensaje3));
+                uart_write_bytes(UART_NUM, usuario, strlen(usuario));
+
+
+                // Espera a recibir la contraseña
+                uart_write_bytes(UART_NUM, mensaje4, strlen(mensaje4));
+                len = uart_read_bytes(UART_NUM, data, BUF_SIZE, portMAX_DELAY);
+                strncpy(contrasena, (char *)data, len);
+                contrasena[len] = '\0';
+                uart_write_bytes(UART_NUM, mensaje5, strlen(mensaje5));
+                uart_write_bytes(UART_NUM, contrasena, strlen(contrasena));
+
+                // Ahora usuario y contraseña contienen la información ingresada
+                // Puedes hacer lo que necesites con esta información
+
             }
             else
             {
-                printf("Comando inválido: Formato incorrecto. Use D<LED_ID>:<DUTY>\n");
+                uart_write_bytes(UART_NUM, noaccede, strlen(noaccede));
             }
         }
     }
+
     free(data);
     vTaskDelete(NULL);
 }

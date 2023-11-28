@@ -17,8 +17,10 @@
 #include "wifi_app.h"
 #include "cJSON.h"
 #include "control_uart.h"
+#include "sensores.h"
 
 
+int valorAlarma=0;
 // Tag used for ESP serial console messages
 static const char TAG[] = "http_server";
 
@@ -478,12 +480,13 @@ esp_err_t ESTADOLED(httpd_req_t *req)
 //PROYECTO FINAL
 esp_err_t ACTIVACIONALARMA(httpd_req_t *req)
 {
-    ESP_LOGI(TAG, "ACTIVACIONALARMA requested");
+	
+    ESP_LOGI(TAG, "ACTIVACION ALARMA requested");
 
     // Aquí deberías procesar la solicitud y activar o desactivar la alarma según el contenido.
 
     // Por ejemplo, puedes obtener el contenido del cuerpo de la solicitud.
-    char buffer[100];
+    char buffer[10];
     int ret, remaining = req->content_len;
     while (remaining > 0) {
         if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0) {
@@ -496,14 +499,12 @@ esp_err_t ACTIVACIONALARMA(httpd_req_t *req)
         remaining -= ret;
     }
 
-    // Imprime el contenido del cuerpo de la solicitud
-    ESP_LOGI(TAG, "Contenido del cuerpo de la solicitud: %s", buffer);
-
     // Convierte el valor de "alarma" a un entero
-    int valorAlarma = atoi(buffer);
+    valorAlarma = atoi(buffer);
+	scanalarma();
 
     // Imprime el valor entero de "alarma"
-    ESP_LOGI(TAG, "Valor entero de alarma: %d", valorAlarma);
+    ESP_LOGI(TAG, "Alarma Activada/Desactivada:");
 
     // Realiza la lógica para activar o desactivar la alarma según el valor del entero.
     // Por ejemplo, si el valor de "alarma" es 1, activa la alarma.
@@ -512,6 +513,20 @@ esp_err_t ACTIVACIONALARMA(httpd_req_t *req)
     return ESP_OK;
 }
 
+esp_err_t ENVIOTEMPERATURA(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "ENVIO TEMPERATURA requested");
+    char enviotemp[10];
+    int temp = temperaturas();
+
+    // Convertir el entero a una cadena de caracteres
+    snprintf(enviotemp, sizeof(enviotemp), "%d", temp);
+
+    // Enviar la respuesta como texto plano
+    httpd_resp_send(req, enviotemp, HTTPD_RESP_USE_STRLEN);
+
+    return ESP_OK;
+}
 
 /**
  * Sets up the default httpd server configuration.
@@ -627,14 +642,23 @@ static httpd_handle_t http_server_configure(void)
 		httpd_register_uri_handler(http_server_handle, &ESTADOLEDS);
 		
 		//PROYECTO FINAL
-		//Registra el handler de correspondiente a la autenticacion y lectura del boton de la alarma 
+		//Registra el handler correspondiente a la autenticacion y lectura del boton de la alarma 
 	    httpd_uri_t activar_alarma = {
         .uri = "/activar_alarma",
         .method = HTTP_POST,
         .handler = ACTIVACIONALARMA,
         .user_ctx = NULL
-    };
+        };
         httpd_register_uri_handler(http_server_handle, &activar_alarma);
+
+		//Registras el handler correspondiente al envio de datos del sensor lm32
+	    httpd_uri_t enviar_temperatura = {
+        .uri = "/enviar_temperatura",
+        .method = HTTP_GET,
+        .handler = ENVIOTEMPERATURA,
+        .user_ctx = NULL
+        };
+		httpd_register_uri_handler(http_server_handle, &enviar_temperatura);
 
 		// register wifiConnect.json handler
 		httpd_uri_t wifi_connect_json = {
@@ -697,7 +721,9 @@ void http_server_fw_update_reset_callback(void *arg)
 	esp_restart();
 }
 
-
+int scanalarma (){
+    return valorAlarma;
+}
 
 
 

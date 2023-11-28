@@ -66,6 +66,15 @@
             font-weight: bold;
             margin-top: 1em;
         }
+
+        #temperatureContainer {
+            display: flex;
+            align-items: center;
+        }
+
+        #updateTemperatureBtn {
+            margin-right: 10px; /* Ajusta el margen según sea necesario */
+        }
     </style>
     <script async src="app.js"></script>
     <title>SISTEMA DE SEGURIDAD</title>
@@ -99,10 +108,17 @@
         <div class="buttons">
             <input id="auth_security" type="button" value="Autenticar" onclick="checkCredentials2()" />
             <button id="toggleAlarm" style="display: none;" onclick="toggleAlarm()">Activar/Desactivar Alarma</button>
+            <div id="temperatureContainer">
+                <button id="updateTemperatureBtn" style="display: none;" onclick="updateTemperature()">Actualizar Temperatura</button>
+                <span id="temperatureDisplay"></span>
+            </div>
         </div>
         <div id="security_auth_credentials_errors"></div>
         <h4 id="security_auth_status"></h4>
         <div id="alarm_status"></div>
     </div>
+
+    
+    
 </body>
 </html>

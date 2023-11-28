@@ -307,6 +307,7 @@ function checkCredentials2() {
 	// Simulación de verificación de usuario y contraseña
 	var username = document.getElementById('auth_user').value;
 	var password = document.getElementById('auth_pass').value;
+	
 
 	// Lógica de autenticación
 	if (username === 'ian' && password === '1234') {
@@ -314,11 +315,16 @@ function checkCredentials2() {
 		document.getElementById('security_auth_credentials_errors').innerText = '';
 		document.getElementById('security_auth_status').innerText = 'Autenticación exitosa';
 		document.getElementById('toggleAlarm').style.display = 'block'; // Muestra el botón para activar/desactivar la alarma
+		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
+		document.getElementById("updateTemperatureBtn").style.display = "block";
+		document.getElementById("temperatureDisplay").style.display = "inline";
 	} else {
 		// Autenticación fallida
 		document.getElementById('security_auth_credentials_errors').innerText = 'Usuario o contraseña incorrectos';
 		document.getElementById('security_auth_status').innerText = '';
 		document.getElementById('toggleAlarm').style.display = 'none'; // Oculta el botón si la autenticación falla
+		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
+		document.getElementById("updateTemperatureBtn").style.display = "none";
 	}
 }
 
@@ -351,6 +357,28 @@ function toggleAlarm() {
     .catch(error => {
         console.error('Error de red:', error);
     });
+}
+
+function updateTemperature() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            if (xhr.status == 200) {
+                // La solicitud fue exitosa
+                var temperatura = xhr.responseText;
+
+                // Actualiza el texto al lado del botón con el nuevo valor de temperatura
+                document.getElementById("temperatureDisplay").innerText = "Temperatura: " + temperatura + " °C";
+            } else {
+                // Hubo un error en la solicitud
+                console.error("Error al obtener la temperatura. Código de estado: " + xhr.status);
+            }
+        }
+    };
+
+    xhr.open("GET", "/enviar_temperatura", true);
+    xhr.send();
 }
 
 function showPassword() {
