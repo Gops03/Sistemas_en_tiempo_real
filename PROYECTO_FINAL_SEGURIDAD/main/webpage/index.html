@@ -44,7 +44,7 @@
             text-align: center;
         }
 
-        #WiFiConnect, #SecurityAuthentication {
+        #WiFiConnect, #SecurityAuthentication, #ACTUALIZACION{
             max-width: 400px;
             margin: 2em auto;
             padding: 1em;
@@ -55,10 +55,14 @@
         }
 
         #WiFiConnect {
-            background-color: #ecf0f1;
+            background-color: #d4e6f1;
         }
 
         #SecurityAuthentication {
+            background-color: #d4e6f1;
+        }
+
+        #ACTUALIZACION {
             background-color: #d4e6f1;
         }
 
@@ -118,7 +122,13 @@
         <div id="alarm_status"></div>
     </div>
 
-    
-    
+    <div id="ACTUALIZACION">
+        <h2>ACTUALIZAR CREDENCIALES</h2>
+        <div class="buttons">
+            <button id="updateCredentialsBtn" onclick="updateCredentials()">Actualizar Credenciales</button>
+        </div>
+        <div id="actualizacion"></div>
+    </div>
+
 </body>
 </html>

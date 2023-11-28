@@ -9,6 +9,8 @@
 
 extern int led_id=0;
 extern int new_duty=0;
+char usuario[9]="12345679";
+char contrasena[9]="87654321";
 
 //FUNCION DE INICIALIZACION PARA EL UART 
 void uart_init(void)
@@ -40,12 +42,12 @@ void uart_command_task(void *arg)
     const char *mensaje1 = "A continuacion digite su numero de superusuario para acceder a los controles: \n";
     const char *accede = "ACCESO CONFIRMADO. \n";
     const char *noaccede = "ACCESO DENEGADO. \n";
-    const char *mensaje2 = "Por favor introduce el nuevo usuario. \n";
-    const char *mensaje3 = "El nuevo usuario es:. \n";
-    const char *mensaje4 = "Por favor introduce la nueva contraseña. \n";
-    const char *mensaje5 = "la nueva contraseña es:. \n";
-    char usuario[32];  // Variable para almacenar el nombre de usuario
-    char contrasena[32];  // Variable para almacenar la contraseña
+    const char *mensaje2 = "Por favor introduce el nuevo usuario(exactamente 8 caracteres): \n";
+    const char *mensaje3 = "El nuevo usuario es: ";
+    const char *mensaje4 = "Por favor introduce la nueva contraseña(exactamente 8 caracteres): \n";
+    const char *mensaje5 = "la nueva contraseña es: ";
+    char usuario[8];  // Variable para almacenar el nombre de usuario
+    char contrasena[8];  // Variable para almacenar la contraseña
 
     while (1)
     {
@@ -64,26 +66,21 @@ void uart_command_task(void *arg)
             if (strcmp(command, "1234") == 0)
             {
                 uart_write_bytes(UART_NUM, accede, strlen(accede));
-                uart_write_bytes(UART_NUM, mensaje2, strlen(mensaje2));
 
-                // Espera a recibir el nombre de usuario
-                len = uart_read_bytes(UART_NUM, data, BUF_SIZE, portMAX_DELAY);
-                strncpy(usuario, (char *)data, len);
+                 // Lee el nuevo usuario
+                uart_write_bytes(UART_NUM, mensaje2, strlen(mensaje2));
+                len = uart_read_bytes(UART_NUM, (uint8_t *)usuario, sizeof(usuario), portMAX_DELAY);
                 usuario[len] = '\0';
                 uart_write_bytes(UART_NUM, mensaje3, strlen(mensaje3));
                 uart_write_bytes(UART_NUM, usuario, strlen(usuario));
 
-
-                // Espera a recibir la contraseña
+                // Lee la nueva contraseña
                 uart_write_bytes(UART_NUM, mensaje4, strlen(mensaje4));
-                len = uart_read_bytes(UART_NUM, data, BUF_SIZE, portMAX_DELAY);
-                strncpy(contrasena, (char *)data, len);
+                len = uart_read_bytes(UART_NUM, (uint8_t *)contrasena, sizeof(contrasena), portMAX_DELAY);
                 contrasena[len] = '\0';
                 uart_write_bytes(UART_NUM, mensaje5, strlen(mensaje5));
                 uart_write_bytes(UART_NUM, contrasena, strlen(contrasena));
 
-                // Ahora usuario y contraseña contienen la información ingresada
-                // Puedes hacer lo que necesites con esta información
 
             }
             else
@@ -97,10 +94,19 @@ void uart_command_task(void *arg)
     vTaskDelete(NULL);
 }
 
+
 int scan (){
     return led_id;
 }
 
 int scan2 (){
     return new_duty;
+}
+
+char* user (){
+    return usuario;
+}
+
+char* contra (){
+    return contrasena;
 }

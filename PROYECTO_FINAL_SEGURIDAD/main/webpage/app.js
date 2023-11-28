@@ -326,6 +326,23 @@ function checkCredentials2() {
 		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
 		document.getElementById("updateTemperatureBtn").style.display = "none";
 	}
+	// Lógica de autenticación
+	if (username === usuarioGlobal && password === contrasenaGlobal) {
+		// Autenticación exitosa
+		document.getElementById('security_auth_credentials_errors').innerText = '';
+		document.getElementById('security_auth_status').innerText = 'Autenticación exitosa';
+		document.getElementById('toggleAlarm').style.display = 'block'; // Muestra el botón para activar/desactivar la alarma
+		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
+		document.getElementById("updateTemperatureBtn").style.display = "block";
+		document.getElementById("temperatureDisplay").style.display = "inline";
+	} else {
+		// Autenticación fallida
+		document.getElementById('security_auth_credentials_errors').innerText = 'Usuario o contraseña incorrectos';
+		document.getElementById('security_auth_status').innerText = '';
+		document.getElementById('toggleAlarm').style.display = 'none'; // Oculta el botón si la autenticación falla
+		// Si las credenciales son válidas, muestra el botón de actualizar temperatura
+		document.getElementById("updateTemperatureBtn").style.display = "none";
+	}
 }
 
 function toggleAlarm() {
@@ -383,6 +400,37 @@ function updateTemperature() {
 
 function showPassword() {
 	// Lógica para mostrar/ocultar la contraseña (puedes implementar esta función según tus necesidades)
+}
+
+var usuarioGlobal;
+var contrasenaGlobal;
+
+function updateCredentials() {
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Manejar la respuesta del servidor
+            var nuevasCredenciales = xhr.responseText;
+
+            // Separar las credenciales usando el delimitador
+            var credencialesArray = nuevasCredenciales.split(';');
+
+            // Asignar los valores a las variables globales
+            usuarioGlobal = credencialesArray[0];
+            contrasenaGlobal = credencialesArray[1];
+
+            // Mostrar las nuevas credenciales en algún elemento HTML (por ejemplo, divs con id 'usuario' y 'contrasena')
+            document.getElementById('usuario').innerText = usuarioGlobal;
+            document.getElementById('contrasena').innerText = contrasenaGlobal;
+        }
+    };
+
+    // Agrega aquí la lógica para actualizar las credenciales
+    document.getElementById('actualizacion').innerText = 'Credenciales Actualizadas';
+
+    xhr.open("GET", "/nuevas_credenciales", true);
+    xhr.send();
 }
 
 

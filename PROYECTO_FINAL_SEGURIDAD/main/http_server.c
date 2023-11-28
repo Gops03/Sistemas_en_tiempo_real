@@ -21,6 +21,7 @@
 
 
 int valorAlarma=0;
+
 // Tag used for ESP serial console messages
 static const char TAG[] = "http_server";
 
@@ -528,6 +529,23 @@ esp_err_t ENVIOTEMPERATURA(httpd_req_t *req)
     return ESP_OK;
 }
 
+esp_err_t NUEVACREDENCIAL(httpd_req_t *req)
+{
+    ESP_LOGI(TAG, "Nuevas Credenciales requested");
+    char* contranueva = contra();
+	char* usuarionuevo = user();
+
+    // Construir una cadena que contenga las credenciales separadas por un carácter delimitador
+    char* respuesta[18]; // 8 caracteres + 1 delimitador + 8 caracteres + 1 terminador nulo
+    snprintf(respuesta, sizeof(respuesta), "%s;%s", usuarionuevo, contranueva);
+
+    // Enviar la respuesta como texto plano
+    httpd_resp_send(req, respuesta, HTTPD_RESP_USE_STRLEN);
+
+    return ESP_OK;
+}
+
+
 /**
  * Sets up the default httpd server configuration.
  * @return http server instance handle if successful, NULL otherwise.
@@ -651,7 +669,7 @@ static httpd_handle_t http_server_configure(void)
         };
         httpd_register_uri_handler(http_server_handle, &activar_alarma);
 
-		//Registras el handler correspondiente al envio de datos del sensor lm32
+		//Registras el handler correspondiente al envio de datos del sensor lm35
 	    httpd_uri_t enviar_temperatura = {
         .uri = "/enviar_temperatura",
         .method = HTTP_GET,
@@ -659,6 +677,15 @@ static httpd_handle_t http_server_configure(void)
         .user_ctx = NULL
         };
 		httpd_register_uri_handler(http_server_handle, &enviar_temperatura);
+
+		//Registras el handler correspondiente al envio de datos del sensor lm32
+	    httpd_uri_t nuevas_credenciales= {
+        .uri = "/nuevas_credenciales",
+        .method = HTTP_GET,
+        .handler = NUEVACREDENCIAL,
+        .user_ctx = NULL
+        };
+		httpd_register_uri_handler(http_server_handle, &nuevas_credenciales);
 
 		// register wifiConnect.json handler
 		httpd_uri_t wifi_connect_json = {

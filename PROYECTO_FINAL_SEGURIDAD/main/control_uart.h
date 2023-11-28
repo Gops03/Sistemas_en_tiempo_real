@@ -9,3 +9,5 @@ void uart_command_task(void* arg);
 
 int scan (void);
 int scan2 (void);
+char* user (void);
+char* contra (void);
