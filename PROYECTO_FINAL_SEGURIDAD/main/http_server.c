@@ -22,12 +22,12 @@
 
 
 int valorAlarma=0;
-int valorLuz=0;
-int luzEntrada=0;
-int nevera=0;
-int ph1=0;
-int ps=0;
-int sirena=0;
+int valorLuz=1;
+int luzEntrada=1;
+int nevera=1;
+int ph1=1;
+int ps=1;
+int sirena=1;
 
 
 
@@ -466,27 +466,6 @@ static esp_err_t http_server_wifi_connect_status_json_handler(httpd_req_t *req)
 	return ESP_OK;
 }
 
-esp_err_t ESTADOLED(httpd_req_t *req)
-{
-    char response[100];
-    char respuesta[100];
-
-    int ESTADO = scan();
-    int INTENSIDAD = scan2();
-    
-    // Use snprintf to format the response
-    snprintf(response, sizeof(response), "-LED #:%d", ESTADO);
-    snprintf(respuesta, sizeof(respuesta), "         -INTENSIDAD:%d", INTENSIDAD);
-
-    // Concatenate both responses into a single string
-    strcat(response, respuesta);
-
-    // Send the concatenated response as plain text
-    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
-    
-    return ESP_OK;
-}
-
 //PROYECTO FINAL
 esp_err_t ACTIVACIONALARMA(httpd_req_t *req)
 {
@@ -511,7 +490,11 @@ esp_err_t ACTIVACIONALARMA(httpd_req_t *req)
 
     // Convierte el valor de "alarma" a un entero
     valorAlarma = atoi(buffer);
-	scanalarma();
+	
+	if(valorAlarma==0)
+	{
+		sirenaa(0);
+	}
 
     // Imprime el valor entero de "alarma"
     ESP_LOGI(TAG, "Alarma Activada/Desactivada:");
@@ -527,10 +510,10 @@ esp_err_t ENVIOTEMPERATURA(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "ENVIO TEMPERATURA requested");
     char enviotemp[10];
-    int temp = temperaturas();
+    float temp = temperaturas();
 
     // Convertir el entero a una cadena de caracteres
-    snprintf(enviotemp, sizeof(enviotemp), "%d", temp);
+    snprintf(enviotemp, sizeof(enviotemp), "%.2f", temp);
 
     // Enviar la respuesta como texto plano
     httpd_resp_send(req, enviotemp, HTTPD_RESP_USE_STRLEN);
@@ -558,40 +541,27 @@ esp_err_t LUZH1(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "Luz Habitacion principal requested");
 
-    // Buffer para almacenar el cuerpo de la solicitud
-    char buffer[10];
-    int ret, remaining = req->content_len;
-
-    // Leer el cuerpo de la solicitud
-    while (remaining > 0)
-    {
-        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
-        {
-            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
-            {
-                httpd_resp_send_408(req);
-            }
-            return ESP_FAIL;
-        }
-        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
-        remaining -= ret;
-    }
-
-    // Convertir el valor de la luz a un entero
-    valorLuz = atoi(buffer);
-	scanluzh1();
-	LUZHABITACION1();
+    // Construir una cadena que contenga las credenciales separadas por un carácter delimitador
+    char respuesta[1]="1"; 
+    httpd_resp_send(req, respuesta, HTTPD_RESP_USE_STRLEN);
+	
 
     // Ahora, puedes usar el valorLuz según tus necesidades.
     if (valorLuz == 1)
     {
         // Realiza acciones cuando la luz está activada
         ESP_LOGI(TAG, "Luz principal activada");
+		valorLuz=0;
+		luzhabitacionprincipal(255);
+		
     }
     else if (valorLuz == 0)
     {
         // Realiza acciones cuando la luz está desactivada
         ESP_LOGI(TAG, "Luz principal desactivada");
+		valorLuz=1;
+		luzhabitacionprincipal(0);
+		
     }
     else
     {
@@ -606,38 +576,24 @@ esp_err_t LUZH1(httpd_req_t *req)
 esp_err_t LUZEN(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "Luz Entrada requested");
-	    // Buffer para almacenar el cuerpo de la solicitud
-    char buffer[10];
-    int ret, remaining = req->content_len;
-
-    // Leer el cuerpo de la solicitud
-    while (remaining > 0)
-    {
-        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
-        {
-            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
-            {
-                httpd_resp_send_408(req);
-            }
-            return ESP_FAIL;
-        }
-        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
-        remaining -= ret;
-    }
-
-    // Convertir el valor de la luz a un entero
-    luzEntrada = atoi(buffer);
+    // Construir una cadena que contenga las credenciales separadas por un carácter delimitador
+    char respuesta[1]="1"; 
+    httpd_resp_send(req, respuesta, HTTPD_RESP_USE_STRLEN);
 
     // Ahora, puedes usar el luzEntrada según tus necesidades.
     if (luzEntrada == 1)
     {
         // Realiza acciones cuando la luz está activada
         ESP_LOGI(TAG, "Luz entrada activada");
-    }
+		luzentrada(255);
+		luzEntrada=0;
+	}	
     else if (luzEntrada == 0)
     {
         // Realiza acciones cuando la luz está desactivada
         ESP_LOGI(TAG, "Luz entrada desactivada");
+		luzentrada(0);
+		luzEntrada=1;
     }
     else
     {
@@ -651,39 +607,24 @@ esp_err_t NEVERA(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "Nevera requested");
 	    // Buffer para almacenar el cuerpo de la solicitud
-    char buffer[10];
-    int ret, remaining = req->content_len;
-
-    // Leer el cuerpo de la solicitud
-    while (remaining > 0)
-    {
-        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
-        {
-            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
-            {
-                httpd_resp_send_408(req);
-            }
-            return ESP_FAIL;
-        }
-        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
-        remaining -= ret;
-    }
-
-    // Convertir el valor de la luz a un entero
-    nevera = atoi(buffer);
-	scannevera();
-
+    // Construir una cadena que contenga las credenciales separadas por un carácter delimitador
+    char respuesta[1]="1"; 
+    httpd_resp_send(req, respuesta, HTTPD_RESP_USE_STRLEN);
 
     // Ahora, puedes usar el luzEntrada según tus necesidades.
     if (nevera == 1)
     {
         // Realiza acciones cuando la luz está activada
         ESP_LOGI(TAG, "Nevera activada");
+		neveraa(255);
+		nevera=0;
     }
     else if (nevera == 0)
     {
         // Realiza acciones cuando la luz está desactivada
         ESP_LOGI(TAG, "Nevera desactivada");
+		neveraa(0);
+		nevera=1;
     }
     else
     {
@@ -697,27 +638,9 @@ esp_err_t PH1(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "Persianas Habitacion Principal requested");
 	    // Buffer para almacenar el cuerpo de la solicitud
-    char buffer[10];
-    int ret, remaining = req->content_len;
-
-    // Leer el cuerpo de la solicitud
-    while (remaining > 0)
-    {
-        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
-        {
-            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
-            {
-                httpd_resp_send_408(req);
-            }
-            return ESP_FAIL;
-        }
-        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
-        remaining -= ret;
-    }
-
-    // Convertir el valor de la luz a un entero
-    ph1 = atoi(buffer);
-	scanph1();
+    // Construir una cadena que contenga las credenciales separadas por un carácter delimitador
+    char respuesta[1]="1"; 
+    httpd_resp_send(req, respuesta, HTTPD_RESP_USE_STRLEN);
 
 
     // Ahora, puedes usar el luzEntrada según tus necesidades.
@@ -725,11 +648,15 @@ esp_err_t PH1(httpd_req_t *req)
     {
         // Realiza acciones cuando la luz está activada
         ESP_LOGI(TAG, "Persianas Habitacion Principal Arriba");
+		persianashabitacionprincipal(255);
+		ph1=0;
     }
     else if (ph1 == 0)
     {
         // Realiza acciones cuando la luz está desactivada
         ESP_LOGI(TAG, "Persianas Habitacion Principal Abajo");
+		persianashabitacionprincipal(0);
+		ph1=1;
     }
     else
     {
@@ -741,30 +668,9 @@ esp_err_t PH1(httpd_req_t *req)
 
 esp_err_t PERS(httpd_req_t *req)
 {
-    ESP_LOGI(TAG, "Persianas Sala requested");
-	    // Buffer para almacenar el cuerpo de la solicitud
-    char buffer[10];
-    int ret, remaining = req->content_len;
-
-    // Leer el cuerpo de la solicitud
-    while (remaining > 0)
-    {
-        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
-        {
-            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
-            {
-                httpd_resp_send_408(req);
-            }
-            return ESP_FAIL;
-        }
-        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
-        remaining -= ret;
-    }
-
-    // Convertir el valor de la luz a un entero
-    ps = atoi(buffer);
-	scanpers();
-
+    // Construir una cadena que contenga las credenciales separadas por un carácter delimitador
+    char respuesta[1]="1"; 
+    httpd_resp_send(req, respuesta, HTTPD_RESP_USE_STRLEN);
 
 
     // Ahora, puedes usar el luzEntrada según tus necesidades.
@@ -772,11 +678,15 @@ esp_err_t PERS(httpd_req_t *req)
     {
         // Realiza acciones cuando la luz está activada
         ESP_LOGI(TAG, "Persianas Sala Arriba");
+		ps=0;
+		persianassala(255);
     }
     else if (ps == 0)
     {
         // Realiza acciones cuando la luz está desactivada
         ESP_LOGI(TAG, "Persianas Sala Abajo");
+		ps=1;
+		persianassala(0);
     }
     else
     {
@@ -786,51 +696,36 @@ esp_err_t PERS(httpd_req_t *req)
     return ESP_OK;
 }
 
+
 esp_err_t SIRENA(httpd_req_t *req)
 {
     ESP_LOGI(TAG, "SIRENA requested");
-	// Buffer para almacenar el cuerpo de la solicitud
-    char buffer[10];
-    int ret, remaining = req->content_len;
 
-    // Leer el cuerpo de la solicitud
-    while (remaining > 0)
-    {
-        if ((ret = httpd_req_recv(req, buffer, MIN(remaining, sizeof(buffer)))) <= 0)
-        {
-            if (ret == HTTPD_SOCK_ERR_TIMEOUT)
-            {
-                httpd_resp_send_408(req);
-            }
-            return ESP_FAIL;
-        }
-        // Aquí puedes procesar el contenido del cuerpo de la solicitud (buffer).
-        remaining -= ret;
-    }
-
-    // Convertir el valor de la luz a un entero
-    sirena = atoi(buffer);
-	scansirena();
-
-
-
-
-    // Ahora, puedes usar el luzEntrada según tus necesidades.
+    // Construir una cadena que contenga las credenciales separadas por un carácter delimitador
+    char respuesta[1]="1"; 
+    httpd_resp_send(req, respuesta, HTTPD_RESP_USE_STRLEN);
+	
+	// Ahora, puedes usar el luzEntrada según tus necesidades.
     if (sirena == 1)
     {
         // Realiza acciones cuando la luz está activada
         ESP_LOGI(TAG, "SIRENA ACTIVADA");
+		sirenaa(255);
+		sirena=0;
     }
     else if (sirena == 0)
     {
         // Realiza acciones cuando la luz está desactivada
         ESP_LOGI(TAG, "SIRENA DESACTIVADA");
+		sirenaa(0);
+		sirena=1;
     }
     else
     {
         // Valor no reconocido, manejar según tus necesidades
         ESP_LOGW(TAG, "Valor de sirena no reconocido: %d", sirena);
     }
+
     return ESP_OK;
 }
 
@@ -939,14 +834,6 @@ static httpd_handle_t http_server_configure(void)
 		};
 		httpd_register_uri_handler(http_server_handle, &OTA_status);
 
-		// register dhtSensor.json handler
-		httpd_uri_t ESTADOLEDS = {
-				.uri = "/ESTADOLED",
-				.method = HTTP_GET,
-				.handler = ESTADOLED,
-				.user_ctx = NULL
-		};
-		httpd_register_uri_handler(http_server_handle, &ESTADOLEDS);
 		
 		//PROYECTO FINAL
 		//Registra el handler correspondiente a la autenticacion y lectura del boton de la alarma 
@@ -979,7 +866,7 @@ static httpd_handle_t http_server_configure(void)
 		//boton luz habitacion 1
 	    httpd_uri_t activar_luz1 = {
         .uri = "/activar_luz1",
-        .method = HTTP_POST,
+        .method = HTTP_GET,
         .handler = LUZH1,
         .user_ctx = NULL
         };
@@ -988,7 +875,7 @@ static httpd_handle_t http_server_configure(void)
 		//boton luz entrada
 	    httpd_uri_t activar_luze = {
         .uri = "/activar_luze",
-        .method = HTTP_POST,
+        .method = HTTP_GET,
         .handler = LUZEN,
         .user_ctx = NULL
         };
@@ -997,7 +884,7 @@ static httpd_handle_t http_server_configure(void)
 		//boton nevera
 	    httpd_uri_t activar_nevera = {
         .uri = "/activar_nevera",
-        .method = HTTP_POST,
+        .method = HTTP_GET,
         .handler = NEVERA,
         .user_ctx = NULL
         };
@@ -1006,7 +893,7 @@ static httpd_handle_t http_server_configure(void)
 		//boton persiana habitacion principal
 	    httpd_uri_t activar_perh1 = {
         .uri = "/activar_perh1",
-        .method = HTTP_POST,
+        .method = HTTP_GET,
         .handler = PH1,
         .user_ctx = NULL
         };
@@ -1015,20 +902,21 @@ static httpd_handle_t http_server_configure(void)
 		//boton persiana sala
 	    httpd_uri_t activar_pers = {
         .uri = "/activar_pers",
-        .method = HTTP_POST,
+        .method = HTTP_GET,
         .handler = PERS,
         .user_ctx = NULL
         };
         httpd_register_uri_handler(http_server_handle, &activar_pers);
 
 		//boton sirena
-	    httpd_uri_t activar_sirena = {
-        .uri = "/activar_sirena",
-        .method = HTTP_POST,
+	    httpd_uri_t activar_sirena1 = {
+        .uri = "/activar_sirena1",
+        .method = HTTP_GET,
         .handler = SIRENA,
         .user_ctx = NULL
         };
-        httpd_register_uri_handler(http_server_handle, &activar_sirena);
+        httpd_register_uri_handler(http_server_handle, &activar_sirena1);
+
 
 		// register wifiConnect.json handler
 		httpd_uri_t wifi_connect_json = {
@@ -1095,12 +983,9 @@ int scanalarma (){
     return valorAlarma;
 }
 
-int scanluzh1 (){
-    return valorLuz;
-}
 
 int scannevera (){
-    return nevera ;
+    return nevera;
 }
 
 int scanph1 (){

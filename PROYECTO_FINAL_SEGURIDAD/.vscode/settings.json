@@ -16,6 +16,7 @@
     "idf.flashType": "UART",
     "idf.portWin": "COM3",
     "files.associations": {
-        "control_uart.h": "c"
+        "control_uart.h": "c",
+        "esp_adc_cal.h": "c"
     }
 }

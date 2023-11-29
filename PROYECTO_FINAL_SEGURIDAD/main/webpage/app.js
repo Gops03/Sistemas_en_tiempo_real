@@ -402,6 +402,7 @@ function updateTemperature() {
     xhr.send();
 }
 
+
 function showPassword() {
 	// Lógica para mostrar/ocultar la contraseña (puedes implementar esta función según tus necesidades)
 }
@@ -448,13 +449,8 @@ function botonhabitacion1() {
     var xhr = new XMLHttpRequest();
 
     // Configurar la solicitud POST a la ruta "/activar_luz1"
-    xhr.open("POST", "/activar_luz1", true);
-
-    // Configurar el encabezado para indicar que se enviará texto plano
-    xhr.setRequestHeader("Content-Type", "text/plain");
-
-    // Enviar la solicitud con el valor de la luz en el cuerpo
-    xhr.send(valorLuz.toString());
+    xhr.open("GET", "/activar_luz1", true);
+    xhr.send();
 
     // Actualizar el estado de la luz para la próxima vez
     estadoLuz = valorLuz;
@@ -474,14 +470,9 @@ function botonentrada() {
     var xhr = new XMLHttpRequest();
 
     // Configurar la solicitud POST a la ruta "/activar_entrada"
-    xhr.open("POST", "/activar_luze", true);
+    xhr.open("GET", "/activar_luze", true);
 
-    // Configurar el encabezado para indicar que se enviará texto plano
-    xhr.setRequestHeader("Content-Type", "text/plain");
-
-    // Enviar la solicitud con el valor de la luz de entrada en el cuerpo
-    xhr.send(valorEntrada.toString());
-
+    xhr.send();
     // Actualizar el estado de la luz de entrada para la próxima vez
     luzEntrada = valorEntrada;
 
@@ -499,13 +490,8 @@ function botonnevera() {
     var xhr = new XMLHttpRequest();
 
     // Configurar la solicitud POST a la ruta "/activar_nevera"
-    xhr.open("POST", "/activar_nevera", true);
-
-    // Configurar el encabezado para indicar que se enviará texto plano
-    xhr.setRequestHeader("Content-Type", "text/plain");
-
-    // Enviar la solicitud con el valor de la nevera en el cuerpo
-    xhr.send(valorNevera.toString());
+    xhr.open("GET", "/activar_nevera", true);
+    xhr.send();
 
     // Actualizar el estado de la nevera para la próxima vez
     estadoNevera = valorNevera;
@@ -523,14 +509,8 @@ function botonpersianash1() {
     // Crear una instancia de XMLHttpRequest
     var xhr = new XMLHttpRequest();
 
-    // Configurar la solicitud POST a la ruta "/activar_persianas"
-    xhr.open("POST", "/activar_perh1", true);
-
-    // Configurar el encabezado para indicar que se enviará texto plano
-    xhr.setRequestHeader("Content-Type", "text/plain");
-
-    // Enviar la solicitud con el valor de las persianas en el cuerpo
-    xhr.send(valorPersianas.toString());
+    xhr.open("GET", "/activar_perh1", true);
+    xhr.send();
 
     // Actualizar el estado de las persianas para la próxima vez
     estadoPersianas = valorPersianas;
@@ -548,14 +528,8 @@ function botonpersianass() {
     // Crear una instancia de XMLHttpRequest
     var xhr = new XMLHttpRequest();
 
-    // Configurar la solicitud POST a la ruta "/activar_persianas2"
-    xhr.open("POST", "/activar_pers", true);
-
-    // Configurar el encabezado para indicar que se enviará texto plano
-    xhr.setRequestHeader("Content-Type", "text/plain");
-
-    // Enviar la solicitud con el valor de las persianas2 en el cuerpo
-    xhr.send(valorPersianas2.toString());
+    xhr.open("GET", "/activar_pers", true);
+    xhr.send();
 
     // Actualizar el estado de las persianas2 para la próxima vez
     estadoPersianas2 = valorPersianas2;
@@ -570,17 +544,10 @@ function botonsirena() {
     // Obtener el valor opuesto al estado actual de la sirena
     var valorSirena = estadoSirena === 1 ? 0 : 1;
 
-    // Crear una instancia de XMLHttpRequest
     var xhr = new XMLHttpRequest();
 
-    // Configurar la solicitud POST a la ruta "/activar_sirena"
-    xhr.open("POST", "/activar_sirena", true);
-
-    // Configurar el encabezado para indicar que se enviará texto plano
-    xhr.setRequestHeader("Content-Type", "text/plain");
-
-    // Enviar la solicitud con el valor de la sirena en el cuerpo
-    xhr.send(valorSirena.toString());
+    xhr.open("GET", "/activar_sirena1", true);
+    xhr.send();
 
     // Actualizar el estado de la sirena para la próxima vez
     estadoSirena = valorSirena;

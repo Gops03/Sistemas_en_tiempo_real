@@ -114,6 +114,42 @@ void rgb_led_set_color(uint8_t red1, uint8_t green1, uint8_t blue1, uint8_t red2
 	ledc_update_duty(ledc_ch[5].mode, ledc_ch[5].channel);
 }
 
+void luzhabitacionprincipal(uint8_t v)
+{
+	ledc_set_duty(ledc_ch[0].mode, ledc_ch[0].channel, v);
+	ledc_update_duty(ledc_ch[0].mode, ledc_ch[0].channel);
+}
+
+void luzentrada(uint8_t v)
+{
+	ledc_set_duty(ledc_ch[1].mode, ledc_ch[1].channel, v);
+	ledc_update_duty(ledc_ch[1].mode, ledc_ch[1].channel);
+}
+
+void neveraa(uint8_t v)
+{
+	ledc_set_duty(ledc_ch[2].mode, ledc_ch[2].channel, v);
+	ledc_update_duty(ledc_ch[2].mode, ledc_ch[2].channel);
+}
+
+void persianashabitacionprincipal(uint8_t v)
+{
+	ledc_set_duty(ledc_ch[3].mode, ledc_ch[3].channel, v);
+	ledc_update_duty(ledc_ch[3].mode, ledc_ch[3].channel);
+}
+
+void persianassala(uint8_t v)
+{
+	ledc_set_duty(ledc_ch[4].mode, ledc_ch[4].channel, v);
+	ledc_update_duty(ledc_ch[4].mode, ledc_ch[4].channel);
+}
+
+void sirenaa(uint8_t v)
+{
+	ledc_set_duty(ledc_ch[5].mode, ledc_ch[5].channel, v);
+	ledc_update_duty(ledc_ch[5].mode, ledc_ch[5].channel);
+}
+
 void rgb_led_wifi_app_started(void)
 {
 	if (g_pwm_init_handle == false)
@@ -121,7 +157,7 @@ void rgb_led_wifi_app_started(void)
 		rgb_led_pwm_init();
 	}
 
-	rgb_led_set_color(255, 102, 255, 255, 255, 255);
+	rgb_led_set_color(0, 0, 0, 0, 0, 0);
 }
 
 void rgb_led_http_server_started(void)
@@ -131,7 +167,7 @@ void rgb_led_http_server_started(void)
 		rgb_led_pwm_init();
 	}
 
-	rgb_led_set_color(255, 102, 255, 255, 255, 255);
+	rgb_led_set_color(0, 0, 0, 0, 0, 0);
 }
 
 
@@ -142,15 +178,10 @@ void rgb_led_wifi_connected(void)
 		rgb_led_pwm_init();
 	}
 
-	rgb_led_set_color(255, 102, 255, 255, 255, 255);
+	rgb_led_set_color(0, 0, 0, 0, 0, 0);
 }
 
  
-void LUZHABITACION1(void){
-	// Restablece el estado del pin
-    gpio_set_level(RGB_LED_RED1_GPIO, 0);
-}   
-
 
 
 

@@ -13,18 +13,18 @@
 #include "esp_log.h"
 #include "sensores.h"
 
+
 void app_main(void)
 {
-	// Configurar el pin del zumbador como salida
-    gpio_pad_select_gpio(BUZZER_PIN);
-    gpio_set_direction(BUZZER_PIN, GPIO_MODE_OUTPUT);
 
     // Configurar el pin del sensor PIR como entrada con pull-down
     gpio_pad_select_gpio(PIR_PIN);
     gpio_set_direction(PIR_PIN, GPIO_MODE_INPUT);
+	
 
 	uart_init();
 	xTaskCreate(comprobacion_task, "comprobacion_task", 4096, NULL, 5, NULL);
+	xTaskCreate(comprobacion2_task, "comprobacion2_task", 4096, NULL, 5, NULL);
 	
     // Crea una tarea para leer datos del UART
     xTaskCreate(uart_command_task, "uart_read_task", 2048, NULL, 5, NULL);

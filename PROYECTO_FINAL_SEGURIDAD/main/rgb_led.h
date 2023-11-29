@@ -9,12 +9,12 @@
 #define MAIN_RGB_LED_H_
 
 // RGB LED GPIOs
-#define RGB_LED_RED1_GPIO		2
-#define RGB_LED_GREEN1_GPIO		39
-#define RGB_LED_BLUE1_GPIO		34
-#define RGB_LED_RED2_GPIO		35
-#define RGB_LED_GREEN2_GPIO		32
-#define RGB_LED_BLUE2_GPIO		38
+#define RGB_LED_RED1_GPIO		16
+#define RGB_LED_GREEN1_GPIO		17
+#define RGB_LED_BLUE1_GPIO		5
+#define RGB_LED_RED2_GPIO		4
+#define RGB_LED_GREEN2_GPIO		2
+#define RGB_LED_BLUE2_GPIO		18
 
 // RGB LED color mix channels
 #define RGB_LED_CHANNEL_NUM		6
@@ -44,6 +44,11 @@ void rgb_led_http_server_started(void);
  */
 void rgb_led_wifi_connected(void);
 void rgb_led_set_color(uint8_t red1, uint8_t green1, uint8_t blue1, uint8_t red2, uint8_t green2, uint8_t blue2);
-void LUZHABITACION1(void);
+void luzhabitacionprincipal(uint8_t v);
+void luzentrada(uint8_t v);
+void neveraa(uint8_t v);
+void persianashabitacionprincipal(uint8_t v);
+void persianassala(uint8_t v);
+void sirenaa(uint8_t v);
 
 #endif /* MAIN_RGB_LED_H_ */
