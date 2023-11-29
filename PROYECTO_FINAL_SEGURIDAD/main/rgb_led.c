@@ -145,6 +145,12 @@ void rgb_led_wifi_connected(void)
 	rgb_led_set_color(255, 102, 255, 255, 255, 255);
 }
 
+ 
+void LUZHABITACION1(void){
+	// Restablece el estado del pin
+    gpio_set_level(RGB_LED_RED1_GPIO, 0);
+}   
+
 
 
 

@@ -18,6 +18,7 @@
 #include "cJSON.h"
 #include "control_uart.h"
 #include "sensores.h"
+#include "rgb_led.h"
 
 
 int valorAlarma=0;
@@ -579,6 +580,7 @@ esp_err_t LUZH1(httpd_req_t *req)
     // Convertir el valor de la luz a un entero
     valorLuz = atoi(buffer);
 	scanluzh1();
+	LUZHABITACION1();
 
     // Ahora, puedes usar el valorLuz según tus necesidades.
     if (valorLuz == 1)

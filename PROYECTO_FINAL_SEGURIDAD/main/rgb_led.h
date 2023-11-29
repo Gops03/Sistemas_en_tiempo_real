@@ -44,5 +44,6 @@ void rgb_led_http_server_started(void);
  */
 void rgb_led_wifi_connected(void);
 void rgb_led_set_color(uint8_t red1, uint8_t green1, uint8_t blue1, uint8_t red2, uint8_t green2, uint8_t blue2);
+void LUZHABITACION1(void);
 
 #endif /* MAIN_RGB_LED_H_ */
